@@ -1,0 +1,8 @@
+
+zsquid:UselessImportCheck"ORemove this unused import 'io.netty.handler.codec.serialization.ClassResolver'.(ÿèÆü8äœ‡Ôœ.
+lsquid:UselessImportCheck"<Remove this unused import 'cache.api.outbound.ResponseData'.(ÐåþÞøÿÿÿÿ8ôˆõÓœ.
+rsquid:UselessImportCheck"HRemove this unused import 'io.netty.handler.codec.MessageToByteEncoder'.(×’¯*8ü¦€Òœ.
+zsquid:UselessImportCheck"ORemove this unused import 'io.netty.handler.codec.serialization.ObjectDecoder'.(¬“Ñ”8©‘ÊÔœ.
+jsquid:UselessImportCheck":Remove this unused import 'cache.api.inbound.RequestData'.(ð‡Êïüÿÿÿÿ8ü¦€Òœ.
+€squid:UselessImportCheck"PRemove this unused import 'io.netty.handler.codec.serialization.ClassResolvers'.(¿êˆ¢üÿÿÿÿ8©‘ÊÔœ.
+zsquid:UselessImportCheck"ORemove this unused import 'io.netty.handler.codec.serialization.ObjectEncoder'.(µÍå‹8ì®ÉÔœ.
