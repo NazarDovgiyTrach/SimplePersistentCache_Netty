@@ -8,6 +8,8 @@ import org.apache.commons.lang3.SerializationUtils;
 public class OutboundDataEncoder extends MessageToByteEncoder<ResponseData> {
   @Override
   protected void encode(ChannelHandlerContext ctx, ResponseData msg, ByteBuf out) throws Exception {
-    out.writeBytes(SerializationUtils.serialize(msg));
+    byte[] serialize = SerializationUtils.serialize(msg);
+    out.writeInt(serialize.length);
+    out.writeBytes(serialize);
   }
 }

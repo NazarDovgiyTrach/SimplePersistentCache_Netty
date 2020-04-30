@@ -1,16 +1,11 @@
 package cache.api.client;
 
-import cache.api.NettyServer;
 import cache.api.inbound.RequestData;
 import cache.api.outbound.ResponseData;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +24,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object responseData) throws Exception {
-   LOG.info("************{}************",((ResponseData)responseData).getStatus());
+    LOG.info("************{}************", ((ResponseData) responseData).getStatus());
     ctx.close();
   }
 }

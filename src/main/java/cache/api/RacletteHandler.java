@@ -1,13 +1,10 @@
 package cache.api;
 
-import org.apache.commons.lang3.SerializationUtils;
-
 import cache.api.inbound.RequestData;
 import cache.api.outbound.ResponseData;
 import cache.store.KeyValueRepository;
 import cache.store.RocksDBRepositoryImpl;
 import cache.util.ActionResolver;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,9 +25,6 @@ public class RacletteHandler extends ChannelInboundHandlerAdapter {
     KeyValueRepository<String, Byte[]> rocksDBRepository =
         new RocksDBRepositoryImpl(dbDir, overwriteExisting);
 
-//    ByteBuf byteBuf = (ByteBuf) data;
-//    byte[]b = new byte[byteBuf.readableBytes()];
-//    byteBuf.readBytes(b);
     RequestData requestData = (RequestData) data;
     ResponseData responseData = ActionResolver.resolve(requestData, rocksDBRepository);
 
