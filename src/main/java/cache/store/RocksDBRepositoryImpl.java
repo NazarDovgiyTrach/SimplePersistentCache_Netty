@@ -1,5 +1,7 @@
 package cache.store;
 
+import cache.exception.KeyExistsException;
+import cache.exception.RepoOpException;
 import java.util.Objects;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -29,16 +31,15 @@ public class RocksDBRepositoryImpl implements KeyValueRepository<String, Byte[]>
   public void save(String key, Byte[] value) {
     try {
       if (!overwriteExisting && rocksDB.keyMayExist(key.getBytes(), null)) {
-        LOG.error(
-            "Entry with the key: {} already exists, please choose another key or enable 'overwriteExisting' mode ",
-            key);
-        return;
+        throw new KeyExistsException(
+            String.format(
+                "Entry with the key: %s already exists, please choose another key or enable 'overwriteExisting' mode ",
+                key));
       }
       rocksDB.put(key.getBytes(), ArrayUtils.toPrimitive(value));
       LOG.info("Entry with key:{} successfully saved to RocksDB", key);
     } catch (RocksDBException e) {
-      LOG.error(
-          "Error saving entry in RocksDB, cause: {}, message: {}", e.getCause(), e.getMessage());
+      throw new RepoOpException("Error saving entry in RocksDB, error:", e);
     }
   }
 
@@ -52,11 +53,8 @@ public class RocksDBRepositoryImpl implements KeyValueRepository<String, Byte[]>
         result = ArrayUtils.toObject(bytes);
       }
     } catch (RocksDBException e) {
-      LOG.error(
-          "Error retrieving the entry in RocksDB from key: {}, cause: {}, message: {}",
-          key,
-          e.getCause(),
-          e.getMessage());
+      throw new RepoOpException(
+          String.format("Error retrieving the entry in RocksDB from key: %s, error", key), e);
     }
     return result;
   }
@@ -67,8 +65,7 @@ public class RocksDBRepositoryImpl implements KeyValueRepository<String, Byte[]>
       rocksDB.delete(key.getBytes());
       LOG.info("Entry with key: {} deleted from RocksDB", key);
     } catch (RocksDBException e) {
-      LOG.error(
-          "Error deleting entry in RocksDB, cause: {}, message: {}", e.getCause(), e.getMessage());
+      throw new RepoOpException("Error deleting entry in RocksDB, error", e);
     }
   }
 

@@ -14,6 +14,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws IOException {
+
     byte[] bytes = "Roclette".getBytes();
     RequestData data = new RequestData();
     data.setAction("CREATE");
@@ -24,7 +25,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object responseData) throws Exception {
-    LOG.info("************{}************", ((ResponseData) responseData).getStatus());
+    System.out.println(
+        String.format("************%s************", ((ResponseData) responseData).getStatus()));
     ctx.close();
   }
 }

@@ -9,7 +9,7 @@ public class RaclettePersistentCacheApplication {
 
   public static void main(String[] args) {
     try {
-      new NettyServer().run(8089);
+      new NettyServer().run(8090);
     } catch (Exception e) {
       LOG.warn("Server error", e);
     }

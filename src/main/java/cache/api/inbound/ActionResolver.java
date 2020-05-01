@@ -1,7 +1,5 @@
-package cache.util;
+package cache.api.inbound;
 
-import cache.api.inbound.Action;
-import cache.api.inbound.RequestData;
 import cache.api.outbound.ResponseData;
 import cache.store.KeyValueRepository;
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,7 +16,7 @@ public class ActionResolver {
   public static ResponseData resolve(
       RequestData requestData, KeyValueRepository<String, Byte[]> keyValueRepository) {
 
-    ResponseData responseData = new ResponseData();
+    ResponseData responseData = new ResponseData(SUCCESS);
     Action action = Action.valueOf(requestData.getAction().toUpperCase());
     try {
       switch (action) {
@@ -26,18 +24,18 @@ public class ActionResolver {
           LOG.info("Perform {} action", action.name());
           keyValueRepository.save(
               requestData.getStringValue(), ArrayUtils.toObject(requestData.getBinaryValue()));
-          responseData.setStatus(SUCCESS);
           break;
         case READ:
           LOG.info("Perform {} action", action.name());
           byte[] binary =
               ArrayUtils.toPrimitive(keyValueRepository.find(requestData.getStringValue()));
-          responseData.setStatus(SUCCESS);
+
           responseData.setBinaryValue(binary);
           break;
         case DELETE:
           LOG.info("Perform {} action", action.name());
           keyValueRepository.delete(requestData.getStringValue());
+
           break;
         default:
           LOG.warn("Unsupported action: {}", action.name());
@@ -45,7 +43,7 @@ public class ActionResolver {
       }
     } catch (Exception e) {
       LOG.error("Error performing {} action", action.name());
-      responseData.setStatus(FAILURE);
+      responseData = new ResponseData(FAILURE, e.getMessage());
     }
     return responseData;
   }

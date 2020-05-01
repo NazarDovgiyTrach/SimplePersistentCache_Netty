@@ -8,12 +8,15 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.logging.LoggingHandler;
 
 public class NettyClient {
   public static void main(String[] args) throws Exception {
-
     String host = "localhost";
-    int port = 8089;
+    int port = 8090;
     EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     try {
@@ -27,8 +30,14 @@ public class NettyClient {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
               ch.pipeline()
+                  .addFirst(new LoggingHandler())
                   .addLast(
-                      new RequestDataEncoder(), new ResponseDataDecoder(), new ClientHandler());
+                      new ObjectEncoder(),
+                      new ObjectDecoder(
+                          Integer.MAX_VALUE,
+                          ClassResolvers.softCachingConcurrentResolver(
+                              getClass().getClassLoader())),
+                      new ClientHandler());
             }
           });
 

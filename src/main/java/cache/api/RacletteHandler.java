@@ -1,10 +1,10 @@
 package cache.api;
 
+import cache.api.inbound.ActionResolver;
 import cache.api.inbound.RequestData;
 import cache.api.outbound.ResponseData;
 import cache.store.KeyValueRepository;
 import cache.store.RocksDBRepositoryImpl;
-import cache.util.ActionResolver;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
