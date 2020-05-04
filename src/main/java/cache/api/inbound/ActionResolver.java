@@ -13,11 +13,16 @@ public class ActionResolver {
 
   private ActionResolver() {}
 
+  /**
+   * This method tries to perform one of the actions({@link Action}) according to the request data, in case
+   * of failure the status of the response will be marked as 'failure', if the reason for the
+   * failure is an exception, an error exception will be added in response.
+   */
   public static ResponseData resolve(
       RequestData requestData, KeyValueRepository<String, Byte[]> keyValueRepository) {
 
     ResponseData responseData = new ResponseData(SUCCESS);
-    Action action = Action.valueOf(requestData.getAction().toUpperCase());
+    Action action = requestData.getAction();
     try {
       switch (action) {
         case CREATE:

@@ -1,5 +1,6 @@
 package cache.api.client;
 
+import cache.api.inbound.Action;
 import cache.api.inbound.RequestData;
 import cache.api.outbound.ResponseData;
 import io.netty.channel.ChannelFuture;
@@ -17,7 +18,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     byte[] bytes = "Roclette".getBytes();
     RequestData data = new RequestData();
-    data.setAction("CREATE");
+    data.setAction(Action.CREATE);
     data.setStringValue("it's roclette key!");
     data.setBinaryValue(bytes);
     ChannelFuture future = ctx.writeAndFlush(data);

@@ -1,2 +1,5 @@
 
-Nsquid:S1481"+Remove this unused "future" local variable.(šñ„Ïıÿÿÿÿ8ŒÏÜâœ.
+Esquid:S1068"'Remove this unused "LOG" private field.(Çõî´8‘¶¸úœ.
+V
+squid:S106"9Replace this use of System.out or System.err by a logger.(ÆÀûı8‘¶¸úœ.
+Nsquid:S1481"+Remove this unused "future" local variable.(šñ„Ïıÿÿÿÿ8ŒÏÜâœ.

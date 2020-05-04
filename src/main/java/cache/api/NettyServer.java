@@ -16,18 +16,16 @@ import java.io.IOException;
 import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 
 public class NettyServer {
   private static final Logger LOG = LogManager.getLogger(NettyServer.class);
   private static final Properties appProps = new Properties();
+  private static String dbDir;
+  private static boolean overwriteExisting;
 
   static {
-    try {
-      appProps.load(
-          NettyServer.class.getClassLoader().getResourceAsStream("application.properties"));
-    } catch (IOException e) {
-      LOG.error("Error reading application properties.");
-    }
+    initializeProperties();
   }
 
   public void run(int port) throws Exception {
@@ -50,10 +48,7 @@ public class NettyServer {
                                   ClassResolvers.softCachingConcurrentResolver(
                                       getClass().getClassLoader())),
                               new ObjectEncoder(),
-                              new RacletteHandler(
-                                  appProps.getProperty("rocksDB.database.path"),
-                                  Boolean.getBoolean(
-                                      appProps.getProperty("rocksDB.overwrite.existing"))));
+                              new RacletteHandler(dbDir, overwriteExisting));
                     }
                   })
               .option(ChannelOption.SO_BACKLOG, 128)
@@ -64,6 +59,24 @@ public class NettyServer {
     } finally {
       workerGroup.shutdownGracefully();
       bossGroup.shutdownGracefully();
+    }
+  }
+  
+  private static void initializeProperties() {
+    try {
+      appProps.load(
+          NettyServer.class.getClassLoader().getResourceAsStream("application.properties"));
+
+      String dbDirProperty = appProps.getProperty("rocksDB.database.path");
+      String overwriteExistingProperty = appProps.getProperty("rocksDB.overwrite.existing");
+
+      dbDir = Strings.isBlank(dbDirProperty) ? "rocks-db" : dbDirProperty;
+      overwriteExisting =
+          Strings.isBlank(overwriteExistingProperty)
+              || Boolean.getBoolean(overwriteExistingProperty);
+
+    } catch (IOException e) {
+      LOG.error("Error reading application properties.");
     }
   }
 }

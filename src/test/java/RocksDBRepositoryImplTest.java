@@ -1,6 +1,9 @@
 import static org.junit.Assert.assertTrue;
 
+import cache.exception.KeyExistsException;
 import cache.store.RocksDBRepositoryImpl;
+import utils.MultithreadingHelper;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RocksDBRepositoryImplTest {
-  private static final Logger LOG = LoggerFactory.getLogger(RocksDBRepositoryImplTest.class);
   private static final File DB_DIR = FileUtils.getTempDirectory();
   private static final String ENTRY = "Some text information";
 
@@ -30,7 +32,7 @@ public class RocksDBRepositoryImplTest {
     Assert.assertEquals(ENTRY, new String(ArrayUtils.toPrimitive(rocksDBRepository.find("Key1"))));
   }
 
-  @Test
+  @Test(expected = KeyExistsException.class)
   public void testSaveWhenOverwriteExistingModeDisabled() {
     // Disabling overwriteExisting mode
     RocksDBRepositoryImpl rocksDBRepository = new RocksDBRepositoryImpl(DB_DIR.getPath(), false);
@@ -55,10 +57,10 @@ public class RocksDBRepositoryImplTest {
     Assert.assertNull(rocksDBRepository.find("Key1"));
   }
 
-  // ********************* MultiThreading tests *******************************
+  // ********************* Multithreading tests *******************************
 
   @Test
-  public void testConcurrentMultiThreadSave() throws InterruptedException {
+  public void testConcurrentMultithreadedSave() throws InterruptedException {
     List<Runnable> runnables =
         Stream.generate(
                 () ->
@@ -77,11 +79,11 @@ public class RocksDBRepositoryImplTest {
             .limit(100)
             .collect(Collectors.toList());
 
-    executeConcurrent(runnables);
+   MultithreadingHelper.executeConcurrent(runnables);
   }
 
   @Test
-  public void testConcurrentMultiThreadDelete() throws InterruptedException {
+  public void testConcurrentMultithreadedDelete() throws InterruptedException {
 
     List<Runnable> runnables =
         Stream.generate(
@@ -101,41 +103,7 @@ public class RocksDBRepositoryImplTest {
             .limit(100)
             .collect(Collectors.toList());
 
-    executeConcurrent(runnables);
+      MultithreadingHelper.executeConcurrent(runnables);
   }
 
-  /** It allows to start all threads at once and monitor process of execution */
-  private static void executeConcurrent(final List<? extends Runnable> threads)
-      throws InterruptedException {
-    final int numThreads = threads.size();
-    final List<Throwable> exceptions = Collections.synchronizedList(new ArrayList<>());
-
-    final CountDownLatch allExecutorThreadsReady = new CountDownLatch(numThreads);
-    final CountDownLatch afterInitBlocker = new CountDownLatch(1);
-    final CountDownLatch allDone = new CountDownLatch(numThreads);
-
-    for (final Runnable runnable : threads) {
-      new Thread(
-              () -> {
-                allExecutorThreadsReady.countDown();
-                try {
-                  afterInitBlocker.await();
-                  LOG.info("Thread: [{}] start", Thread.currentThread().getName());
-                  runnable.run();
-                } catch (Exception e) {
-                  exceptions.add(e);
-                } finally {
-                  LOG.info("Thread: [{}] finished", Thread.currentThread().getName());
-                  allDone.countDown();
-                }
-              })
-          .start();
-    }
-    allExecutorThreadsReady.await();
-    LOG.info("Threads ready");
-    afterInitBlocker.countDown();
-    allDone.await();
-    LOG.info("Threads complete");
-    assertTrue(exceptions.isEmpty());
-  }
 }

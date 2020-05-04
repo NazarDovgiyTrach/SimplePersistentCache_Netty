@@ -3,15 +3,15 @@ package cache.api.inbound;
 import java.io.Serializable;
 
 public class RequestData implements Serializable {
-  private String action;
+  private Action action;
   private String stringValue;
   private byte[] binaryValue;
 
-  public String getAction() {
+  public Action getAction() {
     return action;
   }
 
-  public void setAction(String action) {
+  public void setAction(Action action) {
     this.action = action;
   }
 
