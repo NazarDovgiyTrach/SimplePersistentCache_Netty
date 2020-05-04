@@ -16,7 +16,8 @@ public class ActionResolver {
   /**
    * This method tries to perform one of the actions({@link Action}) according to the request data,
    * in case of failure the status of the response will be marked as 'failure', if the reason for
-   * the failure is an exception, an error exception will be added in response.
+   * the failure is an exception, the detail message string of this exception will be added in
+   * response.
    */
   public static ResponseData resolve(
       RequestData requestData, KeyValueRepository<String, Byte[]> keyValueRepository) {
