@@ -61,7 +61,7 @@ public class NettyServer {
       bossGroup.shutdownGracefully();
     }
   }
-  
+
   private static void initializeProperties() {
     try {
       appProps.load(

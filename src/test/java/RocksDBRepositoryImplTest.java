@@ -1,23 +1,15 @@
-import static org.junit.Assert.assertTrue;
-
 import cache.exception.KeyExistsException;
 import cache.store.RocksDBRepositoryImpl;
-import utils.MultithreadingHelper;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import utils.MultithreadingHelper;
 
 public class RocksDBRepositoryImplTest {
   private static final File DB_DIR = FileUtils.getTempDirectory();
@@ -79,7 +71,7 @@ public class RocksDBRepositoryImplTest {
             .limit(100)
             .collect(Collectors.toList());
 
-   MultithreadingHelper.executeConcurrent(runnables);
+    MultithreadingHelper.executeConcurrent(runnables);
   }
 
   @Test
@@ -103,7 +95,6 @@ public class RocksDBRepositoryImplTest {
             .limit(100)
             .collect(Collectors.toList());
 
-      MultithreadingHelper.executeConcurrent(runnables);
+    MultithreadingHelper.executeConcurrent(runnables);
   }
-
 }

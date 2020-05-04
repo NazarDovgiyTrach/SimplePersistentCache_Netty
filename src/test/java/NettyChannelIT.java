@@ -1,6 +1,3 @@
-import org.junit.Assert;
-import org.junit.Test;
-
 import cache.api.RacletteHandler;
 import cache.api.inbound.Action;
 import cache.api.inbound.RequestData;
@@ -10,6 +7,8 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class NettyChannelIT {
   private final String DB_DIR = "test-rocks-db";
